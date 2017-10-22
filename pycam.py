@@ -1,6 +1,11 @@
-from onvif import ONVIFCamera
 from zeep import Transport
 import requests
+import sys
+
+sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
+
+from client import *
+
 
 class CustomTransport(Transport):
     def __init__(self, proxies):
@@ -21,41 +26,41 @@ class CustomTransport(Transport):
                 proxies=self.proxies)
             return response
 
-        def post(self, address, message, headers):
-            """Proxy to requests.posts()
-            :param address: The URL for the request
-            :param message: The content for the body
-            :param headers: a dictionary with the HTTP headers.
-            """
-            if self.logger.isEnabledFor(logging.DEBUG):
-                log_message = message
+    def post(self, address, message, headers):
+        """Proxy to requests.posts()
+        :param address: The URL for the request
+        :param message: The content for the body
+        :param headers: a dictionary with the HTTP headers.
+        """
+        if self.logger.isEnabledFor(logging.DEBUG):
+            log_message = message
+            if isinstance(log_message, bytes):
+                log_message = log_message.decode('utf-8')
+            self.logger.debug("HTTP Post to %s:\n%s", address, log_message)
+
+        response = self.session.post(
+            address,
+            data=message,
+            headers=headers,
+            timeout=self.operation_timeout,
+            proxies=self.proxies)
+
+        if self.logger.isEnabledFor(logging.DEBUG):
+            media_type = get_media_type(
+                response.headers.get('Content-Type', 'text/xml'))
+
+            if media_type == 'multipart/related':
+                log_message = response.content
+            else:
+                log_message = response.content
                 if isinstance(log_message, bytes):
                     log_message = log_message.decode('utf-8')
-                self.logger.debug("HTTP Post to %s:\n%s", address, log_message)
 
-            response = self.session.post(
-                address,
-                data=message,
-                headers=headers,
-                timeout=self.operation_timeout,
-                proxies=self.proxies)
+            self.logger.debug(
+                "HTTP Response from %s (status: %d):\n%s",
+                address, response.status_code, log_message)
 
-            if self.logger.isEnabledFor(logging.DEBUG):
-                media_type = get_media_type(
-                    response.headers.get('Content-Type', 'text/xml'))
-
-                if media_type == 'multipart/related':
-                    log_message = response.content
-                else:
-                    log_message = response.content
-                    if isinstance(log_message, bytes):
-                        log_message = log_message.decode('utf-8')
-
-                self.logger.debug(
-                    "HTTP Response from %s (status: %d):\n%s",
-                    address, response.status_code, log_message)
-
-            return response
+        return response
 
 user = ''
 password = ''
@@ -63,9 +68,9 @@ host = ''
 port = 1234
 
 proxies = {
-    'http': 'socks5://' + user + ':' + password + '@' + host + ':' + port,
-    'https': 'socks5://' + user + ':' + password + '@' + host + ':' + port
+    'http': 'socks5://' + user + ':' + password + '@' + host + ':' + str(port),
+    'https': 'socks5://' + user + ':' + password + '@' + host + ':' + str(port)
 }
 
 SocksTransport = CustomTransport(proxies)
-mycam = ONVIFCamera('192.168.0.2', 80, 'user', 'passwd', '', transport=SocksTransport)
+mycam = ONVIFCamera('192.168.1.164', 80, 'admin', 'admin', '/home/lz/Coding/python-onvif-zeep/wsdl', transport=SocksTransport)

@@ -1,5 +1,6 @@
 from onvif import ONVIFCamera
-from zeep import Client
+from zeep import Transport
+import requests
 
 class CustomTransport(Transport):
     def __init__(self, proxies):

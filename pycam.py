@@ -64,8 +64,8 @@ class CustomTransport(Transport):
 
 user = ''
 password = ''
-host = ''
-port = 1234
+host = 'localhost'
+port = 1080
 
 proxies = {
     'http': 'socks5://' + user + ':' + password + '@' + host + ':' + str(port),
@@ -73,4 +73,6 @@ proxies = {
 }
 
 SocksTransport = CustomTransport(proxies)
-mycam = ONVIFCamera('192.168.1.164', 80, 'admin', 'admin', '/home/lz/Coding/python-onvif-zeep/wsdl', transport=SocksTransport)
+mycam = ONVIFCamera('192.168.1.164', 1018, 'admin', '888888', '/home/lz/Coding/python-onvif-zeep/wsdl', transport=SocksTransport)
+resp = mycam.devicemgmt.GetHostname()
+print(resp)

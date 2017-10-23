@@ -5,6 +5,12 @@ sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
 
 from client import *
 
+def load_cameras():
+    import json
+    with open('cameras.json') as data_file:    
+        data = json.load(data_file)
+    return data
+
 wsdl = '/home/lz/Coding/python-onvif-zeep/wsdl'
 user = ''
 password = ''
@@ -17,6 +23,14 @@ proxies = {
 }
 
 SocksTransport = CustomTransport(proxies)
-mycam = ONVIFCamera('192.168.1.164', 1018, 'admin', '888888', wsdl, transport=SocksTransport)
-resp = mycam.devicemgmt.GetHostname()
-print(resp)
+cameras = load_cameras()
+for camera in cameras:
+    print('Connecting to ' + camera['name'] + '...')
+    imaging_url = ''
+    mycam = ONVIFCamera(camera['ip'], camera['onvif'], camera['username'], camera['password'], wsdl, transport=SocksTransport)
+    resp = mycam.devicemgmt.GetCapabilities()
+    if resp["Imaging"]:
+        imaging_url = resp["Imaging"]["XAddr"]
+    resp = mycam.devicemgmt.GetServiceCapabilities()
+    print(resp)
+

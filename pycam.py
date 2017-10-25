@@ -1,6 +1,7 @@
 import threading
 import sys
 import socks
+import time
 from custom_transport import *
 from rx import Observable, Observer
 
@@ -85,12 +86,14 @@ def rtsp_connect(camera):
         myrtsp.do_describe()
         while myrtsp.state != 'describe':
             time.sleep(0.1)
-        myrtsp.do_setup(rtsp.track_id_str)
+        myrtsp.do_setup()
         while myrtsp.state != 'setup':
             time.sleep(0.1)
         #Open socket to capture frames here
-        myrtsp.do_play(rtsp.cur_range, rtsp.cur_scale)
-    except:
+        myrtsp.do_play(myrtsp.cur_range, myrtsp.cur_scale)
+    except Exception as e:
+        print('EXCEPTION ------------------------------')
+        print(e)
         myrtsp.do_teardown()
     return camera
 
@@ -100,7 +103,7 @@ def begin_stream(camera):
 #take_until(cancel_launch).\
 #delay_with_selector(lambda s: Observable.timer(2**s*500))
 
-example_of_camera = load_cameras()[1]
+example_of_camera = load_cameras()[0]
 example_of_camera = Camera(
                             id = example_of_camera['id'],
                             ip = example_of_camera['ip'],
@@ -117,7 +120,7 @@ launch_camera = Observable.\
 		do_action(begin_stream)
 		
 launch_camera.subscribe(
-                        on_next=lambda s: print(s),
-                        on_completed=lambda: print('done'),
+                        #on_next=lambda s: print(s),
+                        on_completed=lambda: print('exit'),
                         on_error=lambda e: print(e)
                         )

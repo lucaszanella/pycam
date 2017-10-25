@@ -1,5 +1,6 @@
 import threading
 import sys
+import socks
 from custom_transport import *
 from rx import Observable, Observer
 
@@ -75,7 +76,11 @@ def load_camera_information(camera):
 def rtsp_connect(camera):
     url = camera.rtsp_uri#.replace('554\/11', '10554')
     camera.log('opening RTSP connection to url ' + url + ' ...')
-    myrtsp = RTSPClient(url=url,callback=print)
+
+    s = socks.socksocket() # Same API as socket.socket in the standard lib
+    s.set_proxy(socks.SOCKS5, "localhost") # (socks.SOCKS5, "localhost", 1234)
+
+    myrtsp = RTSPClient(url=url,callback=print, socks=s)
     try:
         myrtsp.do_describe()
         while myrtsp.state != 'describe':

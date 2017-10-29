@@ -1,7 +1,9 @@
+#!/usr/bin/env python3
 import threading
 import sys
 import socks
 import time
+import re
 from custom_transport import *
 from rx import Observable, Observer
 
@@ -74,6 +76,18 @@ def load_camera_information(camera):
         camera.rtsp_uri = resp["Uri"]
     return camera
 
+def decide_streaming(rtsp_body):
+    m = re.findall(r'm=.+', rtsp_body)
+    a = re.findall(r'a=.+', rtsp_body)
+    print(m)
+    print(a)
+    #print(re.findall(r'm=.+', rtsp_body))
+    #print('decide between these: ' + rtsp_body())
+
+def callback(s):
+    #print(s)
+    pass
+
 def rtsp_connect(camera):
     url = camera.rtsp_uri#.replace('554\/11', '10554')
     camera.log('opening RTSP connection to url ' + url + ' ...')
@@ -81,12 +95,12 @@ def rtsp_connect(camera):
     s = socks.socksocket() # Same API as socket.socket in the standard lib
     s.set_proxy(socks.SOCKS5, "localhost") # (socks.SOCKS5, "localhost", 1234)
 
-    myrtsp = RTSPClient(url=url,callback=print, socks=s)
+    myrtsp = RTSPClient(url=url,callback=callback, socks=s, process_describe_response=decide_streaming)
     try:
         myrtsp.do_describe()
         while myrtsp.state != 'describe':
             time.sleep(0.1)
-        myrtsp.do_setup()
+        myrtsp.do_setup('0')
         while myrtsp.state != 'setup':
             time.sleep(0.1)
         #Open socket to capture frames here

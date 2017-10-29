@@ -79,8 +79,22 @@ def load_camera_information(camera):
 def decide_streaming(rtsp_body):
     m = re.findall(r'm=.+', rtsp_body)
     a = re.findall(r'a=.+', rtsp_body)
-    print(m)
-    print(a)
+    m_video = [i.replace('m=', '') for i in m if 'video' in i.lower()]
+    m_audio = [i.replace('m=', '') for i in m if 'audio' in i.lower()]
+    print('m_video: ' + str(m_video))
+    print('m_audio: ' + str(m_audio))
+    for video in m_video:
+        print(video.split(' '))
+    chosen_video = m_video[0].split(' ')
+    chosen_video_port = chosen_video[1]
+    chosen_video_protocol = chosen_video[2]
+    chosen_video_fmt = chosen_video[3]    
+    chosen_audio = m_audio[0].split(' ')
+    chosen_audio_port = chosen_audio[1]
+    chosen_audio_protocol = chosen_audio[2]    
+    print('chosen_video_protocol: ' + chosen_video_protocol)
+    print('chosen_video_port: ' + chosen_video_port)
+    print('chosen_video_fmt: ' + chosen_video_fmt)
     #print(re.findall(r'm=.+', rtsp_body))
     #print('decide between these: ' + rtsp_body())
 

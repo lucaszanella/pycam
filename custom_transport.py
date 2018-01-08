@@ -5,8 +5,8 @@ sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
 from client import *
 
 class CustomTransport(Transport):
-    def __init__(self, proxies):
-        Transport.__init__(self)
+    def __init__(self, timeout=None, proxies=None):
+        Transport.__init__(self, timeout)
         self.proxies = proxies
 
     def get(self, address, params, headers):

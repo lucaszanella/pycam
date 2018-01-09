@@ -41,8 +41,8 @@ proxies = {
 SocksTransport = CustomTransport(timeout=10, proxies=proxies)
 thread_list = []
 proxy = {'socks_user': socks_user, 'socks_password': socks_password, 'socks_host': socks_host, 'socks_port': socks_port}
-#nmap = Nmap(proxy=proxy)
-nmap = Nmap()
+nmap = Nmap(proxy=proxy)
+#nmap = Nmap()
 #----------------------------
 
 class Camera():
@@ -146,7 +146,7 @@ def begin_stream(camera):
 
 print("map scanning...")
 r = nmap.scan(addresses="192.168.1.0/24", ports=[80, 554])
-r = [x for x in r.items() if x[1]==0]
+r = [x for x in r.items() if not x[1]==11]
 print(r)
 print("sleeping")
 time.sleep(10)

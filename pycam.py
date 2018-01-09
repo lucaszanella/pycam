@@ -1,16 +1,20 @@
 #!/usr/bin/env python3
-import threading
 import sys
+#sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
+sys.path.insert(0, '/home/lz/Coding/python-rtsp-client')
+sys.path.insert(0, '/home/lz/Coding/python-native-nmap')
+
+import threading
 import socks
 import time
 import re
 from custom_transport import *
+from pynmap import *
 from time import sleep
 from threading import Thread
 #from rx import Observable, Observer
 
-#sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
-sys.path.insert(0, '/home/lz/Coding/python-rtsp-client')
+
 RTSP_timeout = 10
 
 from client import *
@@ -24,18 +28,22 @@ def load_cameras():
 
 #Socks configuration---------
 wsdl = '/home/lz/Coding/python-onvif-zeep/wsdl'
-user = ''
-password = ''
-host = '192.168.122.1'
-port = 1080
+socks_user = ''
+socks_password = ''
+socks_host = '192.168.122.1'
+socks_port = 1080
 
 proxies = {
-    'http': 'socks5://' + user + ':' + password + '@' + host + ':' + str(port),
-    'https': 'socks5://' + user + ':' + password + '@' + host + ':' + str(port)
+    'http': 'socks5://' + socks_user + ':' + socks_password + '@' + socks_host + ':' + str(socks_port),
+    'https': 'socks5://' + socks_user + ':' + socks_password + '@' + socks_host + ':' + str(socks_port)
 }
-#----------------------------
+
 SocksTransport = CustomTransport(timeout=10, proxies=proxies)
 thread_list = []
+proxy = {'socks_user': socks_user, 'socks_password': socks_password, 'socks_host': socks_host, 'socks_port': socks_port}
+#nmap = Nmap(proxy=proxy)
+nmap = Nmap()
+#----------------------------
 
 class Camera():
     def __init__(self, id=None, ip=None, onvif=None, rtsp=None, username=None, password=None):
@@ -135,6 +143,14 @@ def begin_stream(camera):
 #take_until(cancel_launch).\
 #delay_with_selector(lambda s: Observable.timer(2**s*500))
 #example_of_camera = load_cameras()[0] 
+
+print("map scanning...")
+r = nmap.scan(addresses="192.168.1.0/24", ports=[80, 554])
+r = [x for x in r.items() if x[1]==0]
+print(r)
+print("sleeping")
+time.sleep(10)
+
 #https://repl.it/repls/SubmissiveColossalCaribou
 onvif_ports = ['10080', '1080', '8080']
 rtsp_ports = ['554']#, '10554']

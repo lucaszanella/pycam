@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 import sys
 #sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
-sys.path.insert(0, '/home/lz/Coding/python-rtsp-client')
-sys.path.insert(0, '/home/lz/Coding/python-native-nmap')
+sys.path.insert(0, '/home/lz/Coding/pycamdev/python-rtsp-client')
+sys.path.insert(0, '/home/lz/Coding/pycamdev/python-native-nmap')
+sys.path.insert(0, '/home/lz/Coding/pycamdev/PySocks')
 
 import threading
 import socks
@@ -27,7 +28,7 @@ def load_cameras():
     return data
 
 #Socks configuration---------
-wsdl = '/home/lz/Coding/python-onvif-zeep/wsdl'
+wsdl = '/home/lz/Coding/pycamdev/python-onvif-zeep/wsdl'
 socks_user = ''
 socks_password = ''
 socks_host = '192.168.122.1'
@@ -140,87 +141,11 @@ def rtsp_connect(camera):
 def begin_stream(camera):
     return camera
 
-#take_until(cancel_launch).\
-#delay_with_selector(lambda s: Observable.timer(2**s*500))
-#example_of_camera = load_cameras()[0] 
-
-print("map scanning...")
-r = nmap.scan(addresses="192.168.1.0/24", ports=[80, 554])
-r = [x for x in r.items() if not x[1]==11]
-print(r)
-print("sleeping")
-time.sleep(10)
-
-#https://repl.it/repls/SubmissiveColossalCaribou
-onvif_ports = ['10080', '1080', '8080']
-rtsp_ports = ['554']#, '10554']
-usernames = ['admin']
-passwords = ['888888', 'admin', '']
-cams = [{'id': '', 'ip': '192.168.1.31', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.43', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.72', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.100', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.101', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.102', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.103', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.104', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.107', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.108', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.109', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.110', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.113', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.114', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.133', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.137', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.138', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.139', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.140', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.142', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.157', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.161', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.162', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.164', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.171', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''},
-        {'id': '', 'ip': '192.168.1.173', 'onvif': '10080', 'rtsp': '554', 'username': 'admin', 'password': ''}]
-#'''
-cam = Camera(id = '',
-             ip = '192.168.1.173',
-             onvif = '8080',
-             rtsp = '554',
-             username = 'admin',
-             password = 'admin'
-             )
-
-load_camera_information(cam)   
-print("--------------------------- ONVIF SUCCESS")     
-rtsp_connect(cam)
-time.sleep(10)
-#'''
-
-import multiprocessing.pool
-import functools
-
-def timeout(max_timeout):
-    """Timeout decorator, parameter in seconds."""
-    def timeout_decorator(item):
-        """Wrap the original function."""
-        @functools.wraps(item)
-        def func_wrapper(*args, **kwargs):
-            """Closure for function."""
-            pool = multiprocessing.pool.ThreadPool(processes=1)
-            async_result = pool.apply_async(item, args, kwargs)
-            # raises a TimeoutError if execution exceeds max_timeout
-            return async_result.get(max_timeout)
-        return func_wrapper
-    return timeout_decorator
-
-
 f = open('results.txt', 'w')
 
-#@timeout(5.0)
 def do_camera_probe(ip, onvif_port, rtsp_port, username, password):
         try:
-                #print("-------- Trying connection to " + ip + ":" + str(port))
+                #print("-------- Trying connection to " + ip + ":" + str(onvif_port))
                 print("---------------------------")
                 print("" + ip + ":" + str(onvif_port) + ", rtsp: " + rtsp_port + ", username: " + username + ", password: " + password)
                 cam = Camera(id = '',
@@ -234,27 +159,63 @@ def do_camera_probe(ip, onvif_port, rtsp_port, username, password):
                 load_camera_information(cam)   
                 print("--------------------------- ONVIF SUCCESS")  
                 f.write("ONVIF MATCH " + ip + ":" + str(onvif_port) + ", username: " + username + ", password: " + password + " gonna try rtsp " + rtsp_port + "\n")
-                rtsp_connect(cam)
-                print("--------------------------- RTSP SUCCESS")
-                f.write("RTSP MATCH " + ip + ":" + str(onvif_port) + ", rtsp: " + rtsp_port + ", username: " + username + ", password: " + password + "\n")
+                #rtsp_connect(cam)
+                #print("--------------------------- RTSP SUCCESS")
+                #f.write("RTSP MATCH " + ip + ":" + str(onvif_port) + ", rtsp: " + rtsp_port + ", username: " + username + ", password: " + password + "\n")
         except Exception as e:
-                #print(e)
+                print(e)
                 pass
         
+#take_until(cancel_launch).\
+#delay_with_selector(lambda s: Observable.timer(2**s*500))
+#example_of_camera = load_cameras()[0] 
 
-cams_just_ip = [cam['ip'] for cam in cams]
+print("map scanning...")
+ports=[80, 81, 8080]
+cams = nmap.scan(addresses="192.168.1.0/24", ports=ports)
+#ignore_these = [11, -2]
+allow_these = [-1, 0]
+cams = [x for x in cams.items() if x[1] in allow_these]
+cams = [x[0] for x in cams]
+cams_ips = [x.split(":")[0] for x in cams]
+eliminate_these = ['192.168.1.0', '192.168.1.1', '192.168.1.255']
+cams_ips = [x for x in cams_ips if x not in eliminate_these]
+#https://repl.it/repls/SubmissiveColossalCaribou
+
+#cams_ips = [{'id': '', 'ip': x, 'onvif': '', 'rtsp': '', 'username': '', 'password': ''} for x in cams_ips]
+print(cams_ips)
+'''
+cam = Camera(id = '',
+             ip = '192.168.1.173',
+             onvif = '8080',
+             rtsp = '554',
+             username = 'admin',
+             password = 'admin'
+             )
+
+load_camera_information(cam)   
+print("--------------------------- ONVIF SUCCESS")     
+rtsp_connect(cam)
+time.sleep(10)
+'''
+onvif_ports = ['10080', '1018', '8080']
+rtsp_ports = ['554']#, '10554']
+usernames = ['admin']
+#passwords = ['888888', 'admin', '19929394']
+passwords = ['888888']
 #print(cams_just_ip)
 threads = []
-for ip in cams_just_ip:
+for ip in cams_ips:
         for onvif_port in onvif_ports:
                 for rtsp_port in rtsp_ports:
                         for username in usernames:
                                 for password in passwords:
-                                        sleep(0.1)
                                         #do_camera_probe(obj)
-                                        t = Thread(target=do_camera_probe, args=(ip,onvif_port, rtsp_port, username, password, ))
+                                        #print("ip is " + ip)
+                                        t = Thread(target=do_camera_probe, args=(ip, onvif_port, rtsp_port, username, password, ))
                                         t.start()
                                         threads.append(t)
+                                        sleep(0.1)
 print("---------------------------------------JOINING THREADS")
 for thread in threads:
         thread.join()

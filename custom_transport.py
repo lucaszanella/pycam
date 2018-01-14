@@ -1,7 +1,7 @@
 from zeep import Transport
 import requests
 import sys
-sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
+sys.path.insert(0, '/home/lz/Coding/pycamdev/python-onvif-zeep/onvif')
 from client import *
 
 class CustomTransport(Transport):

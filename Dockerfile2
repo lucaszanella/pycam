@@ -5,12 +5,33 @@ ARG SIP_LINK=https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.7/sip-4.19
 
 ARG PYQT5_LINK=https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-5.10/PyQt5_gpl-5.10.tar.gz
 
+ARG QT5_LINK=https://download.qt.io/official_releases/qt/5.10/5.10.1/single/qt-everywhere-src-5.10.1.tar.xz
+
 RUN apt-get update \
     && apt-get install -y build-essential make wget ca-certificates \
     python3 python3-dev libgl1-mesa-dev\
     qt5-default qml-module-qtquick-controls libqt5qml5 \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
+
+RUN apt-get build-dep qt5-default \
+    && apt-get install libxcb-xinerama0-dev build-essential perl python git \
+    && '^libxcb.*-dev' libx11-xcb-dev libglu1-mesa-dev libxrender-dev libxi-dev \
+    && flex bison gperf libicu-dev libxslt-dev ruby \
+    && libssl-dev libxcursor-dev libxcomposite-dev libxdamage-dev libxrandr-dev libdbus-1-dev libfontconfig1-dev libcap-dev libxtst-dev libpulse-dev libudev-dev libpci-dev libnss3-dev libasound2-dev libxss-dev libegl1-mesa-dev gperf bison \
+    && libasound2-dev libgstreamer0.10-dev libgstreamer-plugins-base0.10-dev \
+    && 
+    && wget --progress=bar:force -O qt5.tar.gz $QT5_LINK \
+    && mkdir qt5 \
+    && tar -xzvf qt5.tar.gz -C qt5 --strip-components=1 \
+    && rm qt5.tar.gz \
+    && cd qt5 \
+    #&& perl init-repository \
+    && ./configure -opensource -confirm-license -nomake tests -opensource -nomake examples \
+    && make -j4 && make install && make clean \
+    && cd .. \
+    && rm -rf qt5
+
 
 #SIP INSTALLAITON
 RUN wget --progress=bar:force -O sip.tar.gz $SIP_LINK \

@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+import signal
+signal.signal(signal.SIGINT, signal.SIG_DFL)
 
 from PyQt5.QtWidgets import *
 from PyQt5.QtQml import *

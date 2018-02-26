@@ -1,0 +1,6 @@
+FROM alpine:latest
+RUN apk add --no-cache qt qt5-qtquickcontrols python3 py3-qt5 qt5-qtdeclarative
+
+WORKDIR /home/project
+
+ENTRYPOINT "/bin/sh"

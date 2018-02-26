@@ -1,0 +1,10 @@
+FROM base/archlinux:latest
+MAINTAINER Lucas Zanella (me@lucaszanella.com)
+
+RUN pacman-db-upgrade
+RUN pacman -Syyu --noconfirm
+RUN pacman -S --noconfirm python-pyqt5 python3 qt5-base qt5-quickcontrols2 qt5-multimedia libxcb libx11 xorg-server qt5-x11extras
+
+WORKDIR /home/project
+
+ENTRYPOINT "/bin/bash"

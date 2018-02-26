@@ -7,8 +7,8 @@ Window {
     id: window
     visible: true
     width: 800
-    height: 480
-    title: qsTr("Hello World")
+    height: 520
+    title: qsTr("PyCam")
     color: "black"
     Material.theme: Material.Light
     Material.accent: Material.Purple

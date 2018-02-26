@@ -1,1 +1,1 @@
-sudo docker build -t pycam .
+docker build -t pycam .

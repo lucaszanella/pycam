@@ -1,37 +1,22 @@
-FROM ubuntu:latest
+FROM ubuntu:bionic
 MAINTAINER Lucas Zanella (me@lucaszanella.com)
-
-ARG SIP_LINK=https://sourceforge.net/projects/pyqt/files/sip/sip-4.19.7/sip-4.19.7.tar.gz
-
-ARG PYQT5_LINK=https://sourceforge.net/projects/pyqt/files/PyQt5/PyQt-5.10/PyQt5_gpl-5.10.tar.gz
 
 RUN apt-get update \
     && apt-get install -y build-essential make wget ca-certificates \
-    python3 python3-dev libgl1-mesa-dev\
-    qt5-default qml-module-qtquick-controls libqt5qml5 \
+    python3 python3-dev libgl1-mesa-dev python3-pyqt5 python3-pyqt5.qtquick \
+    qt5-default qml-module-qtquick-controls2 libqt5qml5 qml-module-qtquick2 qml-module-qtquick-window2 \
     --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
-#SIP INSTALLAITON
-RUN wget --progress=bar:force -O sip.tar.gz $SIP_LINK \
-    && mkdir sip \
-    && tar -xzvf sip.tar.gz -C sip --strip-components=1 \
-    && rm sip.tar.gz \
-    && cd sip \
-    && python3 configure.py && make && make install \
-    && cd .. \
-    && rm -rf sip
+#RUN apt-get install -y dbus-x11 && dbus-uuidgen > /var/lib/dbus/machine-id
 
-#PYQT5 INSTALLAITON
-RUN wget --progress=bar:force -O pyqt5.tar.gz $PYQT5_LINK \
-    && mkdir pyqt5 \
-    && tar -xzvf pyqt5.tar.gz -C pyqt5 --strip-components=1 \
-    && rm pyqt5.tar.gz \
-    && cd pyqt5 \
-    && python3 configure.py --confirm-license && make && make install \
-    && cd .. \
-    && rm -rf pyqt5
+#RUN git clone https://github.com/qt/qtquickcontrols2 \
+#    && cd qtquickcontrols2 \
+#    && qmake \
+#    && make \
+#    && make install
 
-WORKDIR /home/pycam
+
+WORKDIR /home/project
 
 ENTRYPOINT "/bin/bash"

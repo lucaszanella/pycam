@@ -29,17 +29,8 @@ signal.signal(signal.SIGINT, signal.SIG_DFL) #Control C closes window
 
 #Socks configuration---------
 wsdl = '/home/lz/Coding/pycamdev/python-onvif-zeep/wsdl'
-socks_user = ''
-socks_password = ''
-socks_host = '192.168.122.1'
-socks_port = 1080
 
-proxies = {
-    'http': 'socks5://' + socks_user + ':' + socks_password + '@' + socks_host + ':' + str(socks_port),
-    'https': 'socks5://' + socks_user + ':' + socks_password + '@' + socks_host + ':' + str(socks_port)
-}
 
-SocksTransport = CustomTransport(timeout=10, proxies=proxies)
 proxy = {'socks_user': socks_user, 'socks_password': socks_password, 'socks_host': socks_host, 'socks_port': socks_port}
 nmap = Nmap(proxy=proxy)
 #nmap = Nmap()

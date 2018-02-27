@@ -1,5 +1,5 @@
 class Camera():
-    def __init__(self, id=None, ip=None, onvif=None, rtsp=None, username=None, password=None):
+    def __init__(self, id=None, ip=None, onvif=None, rtsp=None, username=None, password=None, socks=None):
         self.id = id
         self.ip = ip
         self.onvif = onvif
@@ -7,12 +7,23 @@ class Camera():
         self.username = username
         self.password = password
         self.rtsp_uri = None
+        if socks:
+            self.socks_user = socks.user || ''
+            self.socks_password = socks.password || ''
+            self.socks_host = socks.host || 'localhost'
+            self.socks_port = socks.port || 1080
+
+            proxies = {
+                'http': 'socks5://' + self.socks_user + ':' + self.socks_password + '@' + self.socks_host + ':' + str(self.socks_port),
+                'https': 'socks5://' + self.socks_user + ':' + self.socks_password + '@' + self.socks_host + ':' + str(self.socks_port)
+            }
+
+            self.socks_transport = CustomTransport(timeout=10, proxies=proxies)
         
     def log(self, info):
-        print('Camera ' + str(self.id) + ', ' + self.ip + ':' + self.onvif + ": " + info)    
+        print('Camera ' + str(self.id) + ', ' + self.ip + ':' + self.onvif + ": " + info)
 
-
-    def probe_information(camera):
+    def probe_information(self):
         camera.log('loading information...')
         camera.log('IP: ' + camera.ip + ', ONVIF: ' + str(camera.onvif))
         mycam = ONVIFCamera(camera.ip, 
@@ -42,7 +53,7 @@ class Camera():
             camera.rtsp_uri = resp["Uri"]
         return camera
 
-    def decide_streaming(rtsp_body):
+    def decide_streaming(self, rtsp_body):
         m = re.findall(r'm=.+', rtsp_body)
         a = re.findall(r'a=.+', rtsp_body)
         m_video = [i.replace('m=', '') for i in m if 'video' in i.lower()]
@@ -64,11 +75,7 @@ class Camera():
         #print(re.findall(r'm=.+', rtsp_body))
         #print('decide between these: ' + rtsp_body())
 
-    def callback(s):
-        #print(s)
-        pass
-
-    def rtsp_connect(camera):
+    def rtsp_connect(self):
         url = camera.rtsp_uri#.replace('554\/11', '10554')
         camera.log('opening RTSP connection to url ' + url + ' ...')
 
@@ -91,5 +98,5 @@ class Camera():
             myrtsp.do_teardown()
         return camera
 
-    def begin_stream(camera):
-        return camera
+    def begin_stream(self):
+        pass

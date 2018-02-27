@@ -8,6 +8,8 @@ Window {
     visible: true
     width: 800
     height: 520
+    minimumWidth: 800
+    minimumHeight: 520
     title: qsTr("PyCam")
     color: "black"
     Material.theme: Material.Light
@@ -19,7 +21,8 @@ Window {
 
         Flow {
             id: flow1
-            width: parent.width * 0.8
+            property var width_percentage : 1
+            width: parent.width * width_percentage
             anchors.top: parent.top
             anchors.topMargin: 0
             anchors.bottom: parent.bottom
@@ -27,17 +30,6 @@ Window {
             clip: false
 
         }
-
-        Column {
-            id: column
-            width: parent.width * 0.2
-            anchors.right: parent.right
-            anchors.rightMargin: 0
-            transformOrigin: Item.Center
-            anchors.top: parent.top
-            anchors.topMargin: 0
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 0
-        }
     }
+
 }

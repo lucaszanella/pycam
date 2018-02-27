@@ -21,10 +21,10 @@ class Camera():
 
         if socks:
             self.socks = True
-            self.socks_user = socks.user or ''
-            self.socks_password = socks.password or ''
-            self.socks_host = socks.host or 'localhost'
-            self.socks_port = socks.port or 1080
+            self.socks_user = socks['user'] or ''
+            self.socks_password = socks['password'] or ''
+            self.socks_host = socks['host']
+            self.socks_port = socks['port'] or 1080
 
             proxies = {
                 'http': 'socks5://' + self.socks_user + ':' + self.socks_password + '@' + self.socks_host + ':' + str(self.socks_port),

@@ -27,8 +27,12 @@ cam = Camera(id = '',
              rtsp = '554',
              username = 'admin',
              password = 'admin',
-             socks = {}
+             socks = {'user': '', 
+                      'password': '', 
+                      'host': '127.0.0.1', 
+                      'port': 1080}
              )
+cam.probe_information()
 
 app = QApplication(sys.argv)
 engine = QQmlApplicationEngine()

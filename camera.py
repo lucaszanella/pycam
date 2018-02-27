@@ -1,3 +1,7 @@
+from custom_transport import *
+from client import *
+from rtsp import RTSPClient
+
 class Camera():
     def __init__(self, id=None, ip=None, onvif=None, rtsp=None, username=None, password=None, socks=None):
         self.id = id
@@ -7,11 +11,12 @@ class Camera():
         self.username = username
         self.password = password
         self.rtsp_uri = None
+        
         if socks:
-            self.socks_user = socks.user || ''
-            self.socks_password = socks.password || ''
-            self.socks_host = socks.host || 'localhost'
-            self.socks_port = socks.port || 1080
+            self.socks_user = socks.user or ''
+            self.socks_password = socks.password or ''
+            self.socks_host = socks.host or 'localhost'
+            self.socks_port = socks.port or 1080
 
             proxies = {
                 'http': 'socks5://' + self.socks_user + ':' + self.socks_password + '@' + self.socks_host + ':' + str(self.socks_port),
@@ -24,34 +29,34 @@ class Camera():
         print('Camera ' + str(self.id) + ', ' + self.ip + ':' + self.onvif + ": " + info)
 
     def probe_information(self):
-        camera.log('loading information...')
-        camera.log('IP: ' + camera.ip + ', ONVIF: ' + str(camera.onvif))
-        mycam = ONVIFCamera(camera.ip, 
-                            camera.onvif,
-                            camera.username, 
-                            camera.password,
+        self.log('loading information...')
+        wsdl = '/home/deps/python-onvif-zeep/wsdl'
+        mycam = ONVIFCamera(self.ip, 
+                            self.onvif,
+                            self.username, 
+                            self.password,
                             wsdl, 
-                            transport=SocksTransport)
-        camera.log('getting capabilities...')
+                            transport=self.socks_transport)
+        self.log('getting capabilities...')
         resp = mycam.devicemgmt.GetCapabilities()
         print(resp)
         if resp["Imaging"]:
-            camera.log('supports imaging services')
+            self.log('supports imaging services')
             imaging_url = resp["Imaging"]["XAddr"]
         if resp["Media"]:
-            camera.log('supports media services')
-            camera.log('querying media services...')
+            self.log('supports media services')
+            self.log('querying media services...')
             media_service = mycam.create_media_service()
-            camera.log('querying profiles...')
+            self.log('querying profiles...')
             profiles = media_service.GetProfiles()
             # Use the first profile and Profiles have at least one
             token = profiles[0].token
-            camera.log('getting system uri...')
+            self.log('getting system uri...')
             params = mycam.devicemgmt.create_type('GetSystemUris')
             resp = mycam.media.GetStreamUri({'StreamSetup':{'Stream':'RTP-Unicast', 'Transport': {'Protocol': 'RTSP'}}, 'ProfileToken':token})
             #print(resp)
-            camera.rtsp_uri = resp["Uri"]
-        return camera
+            #self.rtsp_uri = resp["Uri"]
+        #return camera
 
     def decide_streaming(self, rtsp_body):
         m = re.findall(r'm=.+', rtsp_body)
@@ -76,6 +81,7 @@ class Camera():
         #print('decide between these: ' + rtsp_body())
 
     def rtsp_connect(self):
+        RTSP_timeout = 10
         url = camera.rtsp_uri#.replace('554\/11', '10554')
         camera.log('opening RTSP connection to url ' + url + ' ...')
 

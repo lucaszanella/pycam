@@ -18,18 +18,12 @@ from PyQt5.QtCore import *
 import sys
 import resource_rc #resource needed for material theme
 #---------------------------
-from custom_transport import *
 from camera import Camera
 from pynmap import *
 from time import sleep
 from threading import Thread
-from client import *
-from rtsp import RTSPClient
 
 signal.signal(signal.SIGINT, signal.SIG_DFL) #Control C closes window
-
-#Socks configuration---------
-#wsdl = '/home/deps/python-onvif-zeep/wsdl'
 
 cam = Camera(id = '',
              ip = '192.168.1.173',
@@ -44,10 +38,6 @@ app = QApplication(sys.argv)
 engine = QQmlApplicationEngine()
 engine.load(QUrl('pycam.qml'))
 #sys.exit(app.exec_())
-
-
-
-
 
 """
 #proxy = {'socks_user': socks_user, 'socks_password': socks_password, 'socks_host': socks_host, 'socks_port': socks_port}

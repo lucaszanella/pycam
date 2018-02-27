@@ -2,9 +2,9 @@
 #Lucas Zanella - 2017
 import sys
 #sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
-sys.path.insert(0, '/home/lz/Coding/pycamdev/python-rtsp-client')
-sys.path.insert(0, '/home/lz/Coding/pycamdev/python-native-nmap')
-sys.path.insert(0, '/home/lz/Coding/pycamdev/PySocks')
+sys.path.insert(0, '/home/deps/python-rtsp-client')
+sys.path.insert(0, '/home/deps/python-native-nmap')
+sys.path.insert(0, '/home/deps/PySocks')
 
 import threading
 import socks
@@ -29,7 +29,7 @@ from rtsp import RTSPClient
 signal.signal(signal.SIGINT, signal.SIG_DFL) #Control C closes window
 
 #Socks configuration---------
-wsdl = '/home/lz/Coding/pycamdev/python-onvif-zeep/wsdl'
+#wsdl = '/home/deps/python-onvif-zeep/wsdl'
 
 cam = Camera(id = '',
              ip = '192.168.1.173',

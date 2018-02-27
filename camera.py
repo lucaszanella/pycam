@@ -11,8 +11,9 @@ class Camera():
         self.username = username
         self.password = password
         self.rtsp_uri = None
-        
+
         if socks:
+            self.socks = True
             self.socks_user = socks.user or ''
             self.socks_password = socks.password or ''
             self.socks_host = socks.host or 'localhost'
@@ -82,13 +83,15 @@ class Camera():
 
     def rtsp_connect(self):
         RTSP_timeout = 10
-        url = camera.rtsp_uri#.replace('554\/11', '10554')
-        camera.log('opening RTSP connection to url ' + url + ' ...')
+        url = self.rtsp_uri#.replace('554\/11', '10554')
+        self.log('opening RTSP connection to url ' + url + ' ...')
 
-        s = socks.socksocket() # Same API as socket.socket in the standard lib
-        s.set_proxy(socks.SOCKS5, "localhost") # (socks.SOCKS5, "localhost", 1234)
+        sock = None
+        if self.socks:
+            sock = socks.socksocket() # Same API as socket.socket in the standard lib
+            sock.set_proxy(socks.SOCKS5, "localhost") # (socks.SOCKS5, "localhost", 1234)
 
-        myrtsp = RTSPClient(url=url,callback=callback, socks=s, process_describe_response=decide_streaming, timeout=RTSP_timeout)
+        myrtsp = RTSPClient(url=url,callback=callback, socks=sock, process_describe_response=decide_streaming, timeout=RTSP_timeout)
         try:
             myrtsp.do_describe()
             while myrtsp.state != 'describe':

@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+#Lucas Zanella - 2017
 import sys
 #sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
 sys.path.insert(0, '/home/lz/Coding/pycamdev/python-rtsp-client')
@@ -15,7 +16,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtQml import *
 from PyQt5.QtCore import *
 import sys
-import resource_rc
+import resource_rc #resource needed for material theme
 #---------------------------
 from custom_transport import *
 from camera import Camera
@@ -30,17 +31,29 @@ signal.signal(signal.SIGINT, signal.SIG_DFL) #Control C closes window
 #Socks configuration---------
 wsdl = '/home/lz/Coding/pycamdev/python-onvif-zeep/wsdl'
 
-
-proxy = {'socks_user': socks_user, 'socks_password': socks_password, 'socks_host': socks_host, 'socks_port': socks_port}
-nmap = Nmap(proxy=proxy)
-#nmap = Nmap()
-#----------------------------
+cam = Camera(id = '',
+             ip = '192.168.1.173',
+             onvif = '8080',
+             rtsp = '554',
+             username = 'admin',
+             password = 'admin',
+             socks = True
+             )
 
 app = QApplication(sys.argv)
 engine = QQmlApplicationEngine()
 engine.load(QUrl('pycam.qml'))
 #sys.exit(app.exec_())
+
+
+
+
+
 """
+#proxy = {'socks_user': socks_user, 'socks_password': socks_password, 'socks_host': socks_host, 'socks_port': socks_port}
+#nmap = Nmap(proxy=proxy)
+#nmap = Nmap()
+
 print("map scanning...")
 ports=[80, 81, 8080]
 cams = nmap.scan(addresses="192.168.1.0/24", ports=ports)
@@ -56,12 +69,3 @@ cams_ips = [x for x in cams_ips if x not in eliminate_these]
 #cams_ips = [{'id': '', 'ip': x, 'onvif': '', 'rtsp': '', 'username': '', 'password': ''} for x in cams_ips]
 print(cams_ips)
 """
-
-
-cam = Camera(id = '',
-             ip = '192.168.1.173',
-             onvif = '8080',
-             rtsp = '554',
-             username = 'admin',
-             password = 'admin'
-             )

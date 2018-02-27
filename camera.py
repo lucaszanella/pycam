@@ -1,17 +1,18 @@
 import sys
-#sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
+sys.path.insert(0, '/home/deps/python-onvif-zeep/onvif')
 sys.path.insert(0, '/home/deps/python-rtsp-client')
 sys.path.insert(0, '/home/deps/python-native-nmap')
 sys.path.insert(0, '/home/deps/PySocks')
 
 from custom_transport import *
-#from client import *
+from client import *
 from rtsp import RTSPClient
 import socks
 
 class Camera():
-    def __init__(self, id=None, ip=None, onvif=None, rtsp=None, username=None, password=None, socks=None):
+    def __init__(self, id=None, name=None, ip=None, onvif=None, rtsp=None, username=None, password=None, socks=None):
         self.id = id
+        self.name = name or ''
         self.ip = ip
         self.onvif = onvif
         self.rtsp = rtsp
@@ -34,7 +35,7 @@ class Camera():
             self.socks_transport = CustomTransport(timeout=10, proxies=proxies)
         
     def log(self, info):
-        print('Camera ' + str(self.id) + ', ' + self.ip + ':' + self.onvif + ": " + info)
+        print('Camera ' + self.name + ', id: ' + str(self.id) + ', ' + self.ip + ':' + self.onvif + ": " + info)
 
     def probe_information(self):
         self.log('loading information...')

@@ -21,7 +21,8 @@ from threading import Thread
 
 signal.signal(signal.SIGINT, signal.SIG_DFL) #Control C closes window
 
-cam = Camera(id = '',
+cam = Camera(id = '1',
+             name = 'Teste',
              ip = '192.168.1.173',
              onvif = '8080',
              rtsp = '554',

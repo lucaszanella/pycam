@@ -10,8 +10,11 @@ RUN mkdir -p /home/deps && cd /home/deps \
     && git clone https://github.com/lucaszanella/PySocks \
     && git clone https://github.com/lucaszanella/python-rtsp-client \
     && git clone https://github.com/lucaszanella/python-native-nmap \
-    && git clone https://github.com/lucaszanella/python-onvif-zeep \
-    && cd python-onvif-zeep && python3 setup.py install && cd .. && rm -rf python-onvif-zeep
+    && git clone https://github.com/mvantellingen/python-zeep \
+    && cd python-zeep && git checkout 2421b3419514ce1e0e2ff8d7c7a3a434f13aaf8 && python3 setup.py install && cd .. && rm -rf python-zeep \
+    && git clone https://github.com/lucaszanella/python-onvif-zeep 
+    
+    #&& cd python-onvif-zeep && python3 setup.py install && cd .. && rm -rf python-onvif-zeep
 
 WORKDIR /home/project
 

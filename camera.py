@@ -1,6 +1,13 @@
+import sys
+#sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
+sys.path.insert(0, '/home/deps/python-rtsp-client')
+sys.path.insert(0, '/home/deps/python-native-nmap')
+sys.path.insert(0, '/home/deps/PySocks')
+
 from custom_transport import *
-from client import *
+#from client import *
 from rtsp import RTSPClient
+import socks
 
 class Camera():
     def __init__(self, id=None, ip=None, onvif=None, rtsp=None, username=None, password=None, socks=None):
@@ -40,7 +47,7 @@ class Camera():
                             transport=self.socks_transport)
         self.log('getting capabilities...')
         resp = mycam.devicemgmt.GetCapabilities()
-        print(resp)
+        #self.log(resp)
         if resp["Imaging"]:
             self.log('supports imaging services')
             imaging_url = resp["Imaging"]["XAddr"]

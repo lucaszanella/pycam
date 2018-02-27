@@ -1,13 +1,9 @@
 #!/usr/bin/env python3
 #Lucas Zanella - 2017
 import sys
-#sys.path.insert(0, '/home/lz/Coding/python-onvif-zeep/onvif')
-sys.path.insert(0, '/home/deps/python-rtsp-client')
 sys.path.insert(0, '/home/deps/python-native-nmap')
-sys.path.insert(0, '/home/deps/PySocks')
 
 import threading
-import socks
 import time
 import re
 import signal
@@ -31,7 +27,7 @@ cam = Camera(id = '',
              rtsp = '554',
              username = 'admin',
              password = 'admin',
-             socks = True
+             socks = {}
              )
 
 app = QApplication(sys.argv)

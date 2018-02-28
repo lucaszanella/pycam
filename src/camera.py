@@ -110,17 +110,18 @@ class Camera():
         #print(re.findall(r'm=.+', rtsp_body))
         #print('decide between these: ' + rtsp_body())
 
-    def rtsp_connect(self):
+    def rtsp_connect(self, uri):
         RTSP_timeout = 10
-        url = self.rtsp_uri#.replace('554\/11', '10554')
+        #uri = self.rtsp_uri#.replace('554\/11', '10554')
         self.log('opening RTSP connection to url ' + url + ' ...')
-
+        callback = self.log
         sock = None
         if self.socks:
             sock = socks.socksocket() # Same API as socket.socket in the standard lib
-            sock.set_proxy(socks.SOCKS5, "localhost") # (socks.SOCKS5, "localhost", 1234)
+            #The true is for remote dns resolution
+            sock.set_proxy(socks.SOCKS5, self.socks_host, self.socks_port, True, self.socks_user, self.socks_password) # (socks.SOCKS5, "localhost", 1234)
 
-        myrtsp = RTSPClient(url=url,callback=callback, socks=sock, process_describe_response=decide_streaming, timeout=RTSP_timeout)
+        myrtsp = RTSPClient(url=uri, callback=callback, socks=sock, process_describe_response=self.decide_streaming, timeout=RTSP_timeout)
         try:
             myrtsp.do_describe()
             while myrtsp.state != 'describe':

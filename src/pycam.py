@@ -34,6 +34,8 @@ cam = Camera(id = '1',
                       'port': 1080}
              )
 cam.probe_information()
+for profile in cam.profiles:
+    cam.rtsp_connect(profile.rtsp_uri)
 
 app = QApplication(sys.argv)
 engine = QQmlApplicationEngine()

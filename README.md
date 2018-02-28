@@ -8,4 +8,13 @@ In development. Planned support is for Windows, Linux and OSX.
 
 You're going to need docker. 
 
-Just clone, go to the dev folder, run the build script and then run the run script. You're going to enter a docker container. Now just run `./pycam.py` to launch the app. It's easier to use docker because all the dependencies will be cloned or installed and put in the right place for you to use.
+```
+git clone https://github.com/lucaszanella/pycam
+cd pycam/dev
+./build-pyqt-ubuntu.sh
+./run-pyqt-ubuntu.sh
+```
+
+You're going to enter a docker container. Now just run `./pycam.py` to launch the app. 
+
+It's easier to use docker because all the dependencies will be cloned or installed and put in the right place for you to use.

@@ -9,6 +9,9 @@ from client import *
 from rtsp import RTSPClient
 import socks
 
+class Profile(object):
+    pass
+
 class Camera():
     def __init__(self, id=None, name=None, ip=None, onvif=None, rtsp=None, username=None, password=None, socks=None):
         self.id = id
@@ -19,6 +22,7 @@ class Camera():
         self.username = username
         self.password = password
         self.rtsp_uri = None
+        self.profiles = []
 
         if socks:
             self.socks = True
@@ -35,7 +39,7 @@ class Camera():
             self.socks_transport = CustomTransport(timeout=10, proxies=proxies)
         
     def log(self, info):
-        print('Camera ' + self.name + ', id: ' + str(self.id) + ', ' + self.ip + ':' + self.onvif + ": " + info)
+        print('Camera ' + self.name + ', id: ' + str(self.id) + ', ' + self.ip + ':' + self.onvif + ": " + str(info))
 
     def probe_information(self):
         self.log('loading information...')
@@ -51,20 +55,37 @@ class Camera():
         #self.log(resp)
         if resp["Imaging"]:
             self.log('supports imaging services')
-            imaging_url = resp["Imaging"]["XAddr"]
+            self.imaging_url = resp["Imaging"]["XAddr"]
         if resp["Media"]:
             self.log('supports media services')
             self.log('querying media services...')
             media_service = mycam.create_media_service()
             self.log('querying profiles...')
             profiles = media_service.GetProfiles()
-            # Use the first profile and Profiles have at least one
-            token = profiles[0].token
-            self.log('getting system uri...')
-            params = mycam.devicemgmt.create_type('GetSystemUris')
-            resp = mycam.media.GetStreamUri({'StreamSetup':{'Stream':'RTP-Unicast', 'Transport': {'Protocol': 'RTSP'}}, 'ProfileToken':token})
-            #print(resp)
-            #self.rtsp_uri = resp["Uri"]
+            for profile in profiles:
+                p = Profile()
+                p.name = profile.Name
+                p.token = profile.token
+                p.encoding = profile.VideoEncoderConfiguration.Encoding
+                p.resolution_W = profile.VideoEncoderConfiguration.Resolution.Width
+                p.resolution_H = profile.VideoEncoderConfiguration.Resolution.Height
+                p.quality = profile.VideoEncoderConfiguration.Quality
+                p.framerate_limit = profile.VideoEncoderConfiguration.RateControl.FrameRateLimit
+                p.encoding_interval = profile.VideoEncoderConfiguration.RateControl.EncodingInterval
+                p.bitrate_limit = profile.VideoEncoderConfiguration.RateControl.BitrateLimit
+                self.profiles.append(p)
+
+            for profile in self.profiles:
+                self.log('getting system uri for profile ' + profile.name + " ...")
+                params = mycam.devicemgmt.create_type('GetSystemUris')
+                resp = mycam.media.GetStreamUri({'StreamSetup': {'Stream': 'RTP-Unicast', 'Transport': {'Protocol': 'RTSP'}}, 'ProfileToken': profile.token})
+                if resp['Uri']:
+                    profile.rtsp_uri = resp['Uri']
+                    profile.InvalidAfterConnect = resp['InvalidAfterConnect']
+                    profile.InvalidAfterReboot = resp['InvalidAfterReboot']
+                    profile.Timeout = resp['Timeout']
+                    
+                #self.log(resp)
         #return camera
 
     def decide_streaming(self, rtsp_body):

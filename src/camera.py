@@ -10,6 +10,7 @@ from client import *
 from rtsp import RTSPClient
 import socks
 import time
+import re
 
 class Profile(object):
     pass
@@ -25,7 +26,8 @@ class Camera():
         self.password = password
         self.rtsp_uri = None
         self.profiles = []
-
+        self.socks_transport = None
+        self.socks = False
         if socks:
             self.socks = True
             self.socks_user = socks['user'] or ''
@@ -41,7 +43,9 @@ class Camera():
             self.socks_transport = CustomTransport(timeout=10, proxies=proxies)
         
     def log(self, info):
-        print('Camera ' + self.name + ', id: ' + str(self.id) + ', ' + self.ip + ':' + self.onvif + ": " + str(info))
+        socks_info = ''
+        if self.socks_transport: socks_info = ', socks://' + self.socks_host + ":" + str(self.socks_port)
+        print('Camera ' + self.name + ', id: ' + str(self.id) + ', ' + self.ip + ':' + self.onvif + socks_info + ": " + str(info))
 
     def probe_information(self):
         self.log('loading information...')
@@ -51,7 +55,8 @@ class Camera():
                             self.username, 
                             self.password,
                             wsdl, 
-                            transport=self.socks_transport)
+                            transport=self.socks_transport
+                            )
         self.log('getting capabilities...')
         resp = mycam.devicemgmt.GetCapabilities()
 
@@ -88,8 +93,8 @@ class Camera():
                     profile.Timeout = resp['Timeout']
 
     def decide_streaming(self, rtsp_body):
-        self.log('rtsp body: ')
-        self.log(rtsp_body)
+        #self.log('rtsp body: ')
+        #self.log(rtsp_body)
         m = re.findall(r'm=.+', rtsp_body)
         a = re.findall(r'a=.+', rtsp_body)
         m_video = [i.replace('m=', '') for i in m if 'video' in i.lower()]
@@ -120,7 +125,7 @@ class Camera():
         uri = self.rtsp_uri_ensure_username(uri)
         #uri = self.rtsp_uri#.replace('554\/11', '10554')
         self.log('opening RTSP connection to url ' + uri + ' ...')
-        callback = self.log
+        callback = lambda x: self.log('\n' + x) 
         sock = None
         if self.socks:
             sock = socks.socksocket() # Same API as socket.socket in the standard lib

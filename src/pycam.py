@@ -23,15 +23,16 @@ signal.signal(signal.SIGINT, signal.SIG_DFL) #Control C closes window
 
 cam = Camera(id = '1',
              name = 'Teste',
-             ip = '192.168.1.165',
+             ip = '192.168.1.189',
              onvif = '10080',
              rtsp = '10554',
              username = 'admin',
-             password = '888888',
-             socks = {'user': '', 
-                      'password': '', 
-                      'host': '127.0.0.1', 
-                      'port': 1080}
+             password = '19929394',
+             socks = None
+#             socks = {'user': '', 
+#                      'password': '', 
+#                      'host': '127.0.0.1', 
+#                      'port': 1080}
              )
 cam.probe_information()
 for profile in cam.profiles:

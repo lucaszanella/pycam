@@ -3,11 +3,13 @@ sys.path.insert(0, '/home/deps/python-onvif-zeep/onvif')
 sys.path.insert(0, '/home/deps/python-rtsp-client')
 sys.path.insert(0, '/home/deps/python-native-nmap')
 sys.path.insert(0, '/home/deps/PySocks')
+wsdl = '/home/deps/python-onvif-zeep/wsdl'
 
 from custom_transport import *
 from client import *
 from rtsp import RTSPClient
 import socks
+import time
 
 class Profile(object):
     pass
@@ -43,7 +45,7 @@ class Camera():
 
     def probe_information(self):
         self.log('loading information...')
-        wsdl = '/home/deps/python-onvif-zeep/wsdl'
+        
         mycam = ONVIFCamera(self.ip, 
                             self.onvif,
                             self.username, 
@@ -52,7 +54,7 @@ class Camera():
                             transport=self.socks_transport)
         self.log('getting capabilities...')
         resp = mycam.devicemgmt.GetCapabilities()
-        #self.log(resp)
+
         if resp["Imaging"]:
             self.log('supports imaging services')
             self.imaging_url = resp["Imaging"]["XAddr"]
@@ -84,11 +86,10 @@ class Camera():
                     profile.InvalidAfterConnect = resp['InvalidAfterConnect']
                     profile.InvalidAfterReboot = resp['InvalidAfterReboot']
                     profile.Timeout = resp['Timeout']
-                    
-                #self.log(resp)
-        #return camera
 
     def decide_streaming(self, rtsp_body):
+        self.log('rtsp body: ')
+        self.log(rtsp_body)
         m = re.findall(r'm=.+', rtsp_body)
         a = re.findall(r'a=.+', rtsp_body)
         m_video = [i.replace('m=', '') for i in m if 'video' in i.lower()]
@@ -110,10 +111,15 @@ class Camera():
         #print(re.findall(r'm=.+', rtsp_body))
         #print('decide between these: ' + rtsp_body())
 
+    def rtsp_uri_ensure_username(self, uri):
+        if '@' not in uri: #Simple test. Does it cover all cases?
+            return uri.replace('rtsp://', 'rtsp://' + self.username + ":" + self.password + '@')
+
     def rtsp_connect(self, uri):
         RTSP_timeout = 10
+        uri = self.rtsp_uri_ensure_username(uri)
         #uri = self.rtsp_uri#.replace('554\/11', '10554')
-        self.log('opening RTSP connection to url ' + url + ' ...')
+        self.log('opening RTSP connection to url ' + uri + ' ...')
         callback = self.log
         sock = None
         if self.socks:
@@ -121,7 +127,7 @@ class Camera():
             #The true is for remote dns resolution
             sock.set_proxy(socks.SOCKS5, self.socks_host, self.socks_port, True, self.socks_user, self.socks_password) # (socks.SOCKS5, "localhost", 1234)
 
-        myrtsp = RTSPClient(url=uri, callback=callback, socks=sock, process_describe_response=self.decide_streaming, timeout=RTSP_timeout)
+        myrtsp = RTSPClient(url=uri, callback=callback, socks=sock, process_describe_response=self.decide_streaming)#, timeout=RTSP_timeout)
         try:
             myrtsp.do_describe()
             while myrtsp.state != 'describe':
@@ -135,7 +141,7 @@ class Camera():
             print('EXCEPTION ------------------------------')
             print(e)
             myrtsp.do_teardown()
-        return camera
+        #return camera
 
     def begin_stream(self):
         pass

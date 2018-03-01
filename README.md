@@ -11,8 +11,8 @@ You're going to need docker.
 ```
 git clone https://github.com/lucaszanella/pycam
 cd pycam/dev
-./build-pyqt-ubuntu.sh
-./run-pyqt-ubuntu.sh
+./build.sh
+./run.sh
 ```
 
 You're going to enter a docker container. Now just run `./pycam.py` to launch the app. 

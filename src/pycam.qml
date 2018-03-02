@@ -6,8 +6,8 @@ import QtQuick.Controls.Material 2.0
 Window {
     id: window
     visible: true
-    width: 800
-    height: 520
+    width: 1280
+    height: 720
     minimumWidth: 800
     minimumHeight: 520
     title: qsTr("PyCam")
@@ -15,21 +15,75 @@ Window {
     Material.theme: Material.Light
     Material.accent: Material.Purple
 
-
     Row {
         id: row
         anchors.fill: parent
-
+        state: "normal"
+        width: window.width
+        height: window.height
         Flow {
             id: flow1
-            width: window.width
-            height: window.height
+            width: parent.width
+            height: parent.height
             anchors.top: parent.top
             anchors.topMargin: 0
             anchors.bottom: parent.bottom
             anchors.bottomMargin: 0
             clip: false
+
+            Rectangle {
+                id: rectangle
+                width: 800
+                height: 450
+                color: "#8ed586"
+            }
+
+            Rectangle {
+                id: rectangle1
+                width: 480
+                height: 270
+                color: "#504abe"
+                anchors.left: rectangle.right
+                anchors.leftMargin: 0
+            }
+
+            Rectangle {
+                id: rectangle2
+                width: 480
+                height: 270
+                color: "#cae274"
+                anchors.top: rectangle1.bottom
+                anchors.topMargin: 0
+                anchors.left: rectangle.right
+                anchors.leftMargin: 0
+            }
         }
+        states: [
+            State {
+                name: "normal"
+                PropertyChanges { target: row; x: 0; }
+            },
+            State {
+                name: "column_opened"
+                PropertyChanges { target: row; x: 300 }
+            }
+        ]
+        transitions: [
+
+            // When transitioning to 'middleRight' move x,y over a duration of 1 second,
+            // with OutBounce easing function.
+            Transition {
+                from: "normal"; to: "column_opened"
+                NumberAnimation { properties: "x,y"; easing.type: Easing.OutExpo; duration: 500 }
+            },
+
+            // When transitioning to 'bottomLeft' move x,y over a duration of 2 seconds,
+            // with InOutQuad easing function.
+            Transition {
+                from: "column_opened"; to: "normal"
+                NumberAnimation { properties: "x,y"; easing.type: Easing.OutExpo; duration: 500 }
+            }
+        ]
     }
 
     Column {
@@ -43,16 +97,16 @@ Window {
         Rectangle {
             color: "#202226"
             anchors.fill: parent
-          GridView {
-            delegate: Rectangle {
-              color: "transparent"
+            GridView {
+                delegate: Rectangle {
+                    color: "transparent"
+                }
             }
-          }
         }
         states: [
             State {
                 name: "opened"
-                PropertyChanges { target: column; x: width*0.1; }
+                PropertyChanges { target: column; x: width*0.3; }
             },
             State {
                 name: "closed"
@@ -80,7 +134,7 @@ Window {
             // with InOutQuad easing function.
             Transition {
                 from: "opened"; to: "closed"
-                NumberAnimation { properties: "x,y"; easing.type: Easing.OutExpo; duration: 1000 }
+                NumberAnimation { properties: "x,y"; easing.type: Easing.OutExpo; duration: 300 }
             }
         ]
 
@@ -88,15 +142,32 @@ Window {
 
     Button {
         id: button
-        x: 688
-        y: 467
-        text: qsTr("config")
+        x: 743
+        y: 462
+        width: 45
+        height: 45
+        anchors.bottom: parent.bottom
+        anchors.bottomMargin: 20
+        anchors.right: parent.right
+        anchors.rightMargin: 20
+        autoExclusive: false
+        checked: false
+        Material.foreground: false
+        background: Image {
+            anchors.topMargin: 0
+            anchors.fill: parent
+            source: "graphics/setup.png"
+            fillMode: Image.PreserveAspectFit
+        }
+        checkable: true
+        MouseArea {
+            width: 45
+            height: 45
+            cursorShape: Qt.PointingHandCursor; acceptedButtons: Qt.DragMoveCursor }
         //Mouse area to react on click events
         onClicked: {
-            button.text = "cjh"
-            column.state = "opened"
+            row.state = "column_opened"
+            column.state = column.state == "opened" ? column.state="closed" : column.state="opened"
         }
     }
-
-
 }

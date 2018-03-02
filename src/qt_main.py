@@ -13,6 +13,9 @@ if __name__ == '__main__':
 	app = QApplication(sys.argv)
 	engine = QQmlApplicationEngine()
 	engine.load(QUrl('pycam.qml'))
-	sys.exit(app.exec_())
+	app.exec_()
+	#sys.exit(app.exec_())
+	while True: 
+		pass
 
 

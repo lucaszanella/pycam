@@ -34,14 +34,14 @@ cam = Camera(id = '1',
 #                      'host': '127.0.0.1', 
 #                      'port': 1080}
              )
-cam.probe_information()
-for profile in cam.profiles:
-    cam.rtsp_connect(profile.rtsp_uri)
+#cam.probe_information()
+#for profile in cam.profiles:
+#    cam.rtsp_connect(profile.rtsp_uri)
 
 app = QApplication(sys.argv)
 engine = QQmlApplicationEngine()
 engine.load(QUrl('pycam.qml'))
-#sys.exit(app.exec_())
+sys.exit(app.exec_())
 
 """
 #proxy = {'socks_user': socks_user, 'socks_password': socks_password, 'socks_host': socks_host, 'socks_port': socks_port}

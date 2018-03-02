@@ -15,12 +15,47 @@ Window {
     Material.theme: Material.Light
     Material.accent: Material.Purple
 
+    //flags: Qt.FramelessWindowHint | Qt.Window
+    /*
+    Column {
+        id: titlebar
+        width: window.width
+        height: 25
+
+        Rectangle {
+            id: rectangle6
+            width: parent.width
+            height: parent.height
+            color: "#2b2b2b"
+            MouseArea {
+                width: parent.width
+                height: parent.height
+                property variant clickPos: "1,1"
+
+                onPressed: {
+                    clickPos  = Qt.point(mouse.x,mouse.y)
+                }
+
+                onPositionChanged: {
+                    var delta = Qt.point(mouse.x-clickPos.x, mouse.y-clickPos.y)
+                    window.x += delta.x;
+                    window.y += delta.y;
+                }
+            }
+        }
+    }
+    */
+
     Row {
         id: row
-        anchors.fill: parent
         state: "normal"
         width: window.width
-        height: window.height
+        height: window.height// - titlebar.height
+        anchors.top: titlebar.bottom
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.left: parent.left
+        anchors.topMargin: 0
         Flow {
             id: flow1
             width: parent.width
@@ -120,9 +155,10 @@ Window {
     Column {
         id: column
         x: 0
-        y: 0
         width: window.width
-        height: window.height
+        height: window.height// - titlebar.height
+        anchors.top: titlebar.bottom
+        anchors.topMargin: 0
         state: "closed"
         visible: true
         Rectangle {
@@ -147,8 +183,8 @@ Window {
 
         Button {
             id: button1
-            x: 8
-            y: 9
+            x: 20
+            y: 40
             text: qsTr("Button")
         }
 
@@ -201,4 +237,5 @@ Window {
             column.state = column.state == "opened" ? column.state="closed" : column.state="opened"
         }
     }
+
 }

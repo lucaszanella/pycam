@@ -33,15 +33,15 @@ Window {
 
             Rectangle {
                 id: rectangle
-                width: 800
-                height: 450
+                width: parent.width*6.5/10
+                height: this.width*9/16
                 color: "#8ed586"
             }
 
             Rectangle {
                 id: rectangle1
-                width: 480
-                height: 270
+                width: this.height*16/9
+                height: rectangle.height/2
                 color: "#504abe"
                 anchors.left: rectangle.right
                 anchors.leftMargin: 0
@@ -49,13 +49,44 @@ Window {
 
             Rectangle {
                 id: rectangle2
-                width: 480
-                height: 270
+                width: this.height*16/9
+                height: rectangle.height/2
                 color: "#cae274"
                 anchors.top: rectangle1.bottom
                 anchors.topMargin: 0
                 anchors.left: rectangle.right
                 anchors.leftMargin: 0
+            }
+
+            Rectangle {
+                id: rectangle3
+                width: rectangle2.width
+                height: rectangle2.height
+                color: "#ffffff"
+                anchors.left: parent.left
+                anchors.leftMargin: 0
+                anchors.top: rectangle.bottom
+                anchors.topMargin: 0
+            }
+            Rectangle {
+                id: rectangle4
+                width: rectangle2.width
+                height: rectangle2.height
+                color: "#2a4e95"
+                anchors.left: rectangle3.right
+                anchors.leftMargin: 0
+                anchors.top: rectangle.bottom
+                anchors.topMargin: 0
+            }
+            Rectangle {
+                id: rectangle5
+                width: rectangle2.width
+                height: rectangle2.height
+                color: "#2ce1b9"
+                anchors.left: rectangle4.right
+                anchors.leftMargin: 0
+                anchors.top: rectangle.bottom
+                anchors.topMargin: 0
             }
         }
         states: [

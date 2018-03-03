@@ -17,6 +17,6 @@ RUN mkdir -p /home/deps && cd /home/deps \
     
     #&& cd python-onvif-zeep && python3 setup.py install && cd .. && rm -rf python-onvif-zeep
 
-WORKDIR /home/project
+WORKDIR /home/project/src
 
 ENTRYPOINT "/bin/bash"

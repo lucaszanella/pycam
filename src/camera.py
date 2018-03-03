@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, '/home/deps/python-onvif-zeep/onvif')
-#sys.path.insert(0, '/home/deps/python-rtsp-client')
-sys.path.insert(0, '/home/deps/python-rtsp-client-orig')
+sys.path.insert(0, '/home/deps/python-rtsp-client')
+#sys.path.insert(0, '/home/deps/python-rtsp-client-orig')
 sys.path.insert(0, '/home/deps/python-native-nmap')
 sys.path.insert(0, '/home/deps/PySocks')
 wsdl = '/home/deps/python-onvif-zeep/wsdl'
@@ -93,7 +93,7 @@ class Camera():
                     profile.InvalidAfterReboot = resp['InvalidAfterReboot']
                     profile.Timeout = resp['Timeout']
 
-    def decide_streaming(self, rtsp_body):
+    def choose_transport(self, rtsp_body):
         #self.log('rtsp body: ')
         #self.log(rtsp_body)
         m = re.findall(r'm=.+', rtsp_body)
@@ -133,7 +133,7 @@ class Camera():
             #The true is for remote dns resolution
             sock.set_proxy(socks.SOCKS5, self.socks_host, self.socks_port, True, self.socks_user, self.socks_password) # (socks.SOCKS5, "localhost", 1234)
 
-        myrtsp = RTSPClient(url=uri, callback=callback, socks=sock, process_describe_response=self.decide_streaming)#, timeout=RTSP_timeout)
+        myrtsp = RTSPClient(url=uri, callback=callback, socks=sock, choose_transport=self.choose_transport)#, timeout=RTSP_timeout)
         try:
             myrtsp.do_describe()
             while myrtsp.state != 'describe':

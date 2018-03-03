@@ -23,7 +23,7 @@ signal.signal(signal.SIGINT, signal.SIG_DFL) #Control C closes window
 
 cam = Camera(id = '1',
              name = 'Teste',
-             ip = '192.168.1.189',
+             ip = '192.168.1.198',
              onvif = '10080',
              rtsp = '10554',
              username = 'admin',

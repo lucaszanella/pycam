@@ -114,6 +114,7 @@ class Camera():
         print('chosen_video_protocol: ' + chosen_video_protocol)
         print('chosen_video_port: ' + chosen_video_port)
         print('chosen_video_fmt: ' + chosen_video_fmt)
+        return ['rtp_avp_tcp']
         #print(re.findall(r'm=.+', rtsp_body))
         #print('decide between these: ' + rtsp_body())
 
@@ -138,7 +139,7 @@ class Camera():
             myrtsp.do_describe()
             while myrtsp.state != 'describe':
                 time.sleep(0.1)
-            myrtsp.do_setup('0')
+            myrtsp.do_setup('track0')
             while myrtsp.state != 'setup':
                 time.sleep(0.1)
             #Open socket to capture frames here

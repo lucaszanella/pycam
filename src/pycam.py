@@ -11,7 +11,6 @@ import signal
 from PyQt5.QtWidgets import *
 from PyQt5.QtQml import *
 from PyQt5.QtCore import *
-import sys
 import resource_rc #resource needed for material theme
 #---------------------------
 from camera import Camera
@@ -20,6 +19,13 @@ from time import sleep
 from threading import Thread
 
 signal.signal(signal.SIGINT, signal.SIG_DFL) #Control C closes window
+
+#Used for debug on MY specfic computer with my specific cameras
+P=False
+if len(sys.argv)>1 and sys.argv[1]=='lz':
+    print("Lucas Zanella debug activated")
+    from cameras import cams
+    P=True
 
 cam = Camera(id = '1',
              name = 'Teste',
@@ -34,6 +40,9 @@ cam = Camera(id = '1',
 #                      'host': '127.0.0.1', 
 #                      'port': 1080}
              )
+
+if P:
+    cam = cams[0]
 cam.probe_information()
 for profile in cam.profiles:
     cam.rtsp_connect(profile.rtsp_uri)

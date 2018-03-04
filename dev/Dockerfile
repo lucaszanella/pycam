@@ -6,7 +6,7 @@ RUN apt-get update \
     python3 python3-pyqt5 python3-pyqt5.qtquick python3-pip git python3-setuptools \
     qt5-default qml-module-qtquick-controls2 libqt5qml5 qml-module-qtquick2 qml-module-qtquick-window2
 
-RUN mkdir -p /home/deps && cd /home/deps \
+RUN mkdir -p /home/deps && cd /home/deps  \
     && git clone https://github.com/lucaszanella/PySocks \
     && git clone https://github.com/lucaszanella/python-rtsp-client \
     && git clone https://github.com/lucaszanella/python-native-nmap && cd python-native-nmap && git checkout 45c73976f50134a89009d38c5763501bcaea0199 && cd .. \

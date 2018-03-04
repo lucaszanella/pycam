@@ -1,7 +1,7 @@
 import sys
 sys.path.insert(0, '/home/deps/python-onvif-zeep/onvif')
-#sys.path.insert(0, '/home/deps/python-rtsp-client')
-sys.path.insert(0, '/home/deps/python-rtsp-client-orig')
+sys.path.insert(0, '/home/deps/python-rtsp-client')
+#sys.path.insert(0, '/home/deps/python-rtsp-client-orig')
 sys.path.insert(0, '/home/deps/python-native-nmap')
 sys.path.insert(0, '/home/deps/PySocks')
 wsdl = '/home/deps/python-onvif-zeep/wsdl'
@@ -12,6 +12,7 @@ from rtsp import RTSPClient
 import socks
 import time
 import re
+
 
 class Profile(object):
     pass
